@@ -1,10 +1,16 @@
-const express = require("express");
+// routes/fines.js
+const express = require('express');
 const router = express.Router();
-const fineController = require("../controllers/fine.controller");
+const {
+  getAllFines,
+  createFine,
+  updateFine,
+  deleteFine
+} = require('../controllers/fine.controller');
 
-router.get("/", fineController.getAllFines);
-router.get("/:id", fineController.getFineByMember);
-router.post("/", fineController.addFine);
-router.delete("/:id", fineController.clearFine);
+router.get('/', getAllFines);
+router.post('/', createFine);
+router.put('/:id', updateFine);
+router.delete('/:id', deleteFine);
 
 module.exports = router;

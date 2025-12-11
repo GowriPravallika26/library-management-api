@@ -1,14 +1,24 @@
-module.exports = (sequelize, DataTypes) => {
-    return sequelize.define("Book", {
-        isbn: DataTypes.STRING,
-        title: DataTypes.STRING,
-        author: DataTypes.STRING,
-        category: DataTypes.STRING,
-        status: {
-            type: DataTypes.STRING,
-            defaultValue: "available"
-        },
-        total_copies: DataTypes.INTEGER,
-        available_copies: DataTypes.INTEGER
-    });
-};
+const { DataTypes } = require('sequelize');
+const sequelize = require('../db');
+
+const Book = sequelize.define('Book', {
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  author: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  isbn: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false
+  },
+  available: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  }
+});
+
+module.exports = Book;

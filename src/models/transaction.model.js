@@ -1,11 +1,29 @@
-module.exports = (sequelize, DataTypes) => {
-    return sequelize.define("Transaction", {
-        borrowed_at: DataTypes.DATE,
-        due_date: DataTypes.DATE,
-        returned_at: DataTypes.DATE,
-        status: {
-            type: DataTypes.STRING,
-            defaultValue: "active"
-        }
-    });
-};
+// models/transactionModel.js
+const { DataTypes } = require('sequelize');
+const sequelize = require('../db');
+const Book = require('./book.model');
+const Member = require('./member.model');
+
+const Transaction = sequelize.define('Transaction', {
+  issueDate: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
+  },
+  returnDate: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  status: {
+    type: DataTypes.ENUM('issued', 'returned'),
+    defaultValue: 'issued'
+  }
+});
+
+// Associations
+Member.hasMany(Transaction);
+Transaction.belongsTo(Member);
+
+Book.hasMany(Transaction);
+Transaction.belongsTo(Book);
+
+module.exports = Transaction;

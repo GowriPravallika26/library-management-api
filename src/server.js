@@ -1,15 +1,31 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const db = require("./models");
+
+const sequelize = require('./db');           // import sequelize
+const Book = require('./models/book.model');      // import Book model
+
+const Transaction = require('./models/transaction.model');
+const Member = require('./models/member.model');
+const Fine = require('./models/fine.model');
+
+// Sync database (adds missing columns like 'available')'
+sequelize.sync({ alter: true })
+  .then(() => console.log('Database synced successfully'))
+  .catch(err => console.error('Error syncing database:', err));
+
+// Correct route imports
+const bookRoutes = require('./routes/book.routes');
+const fineRoutes = require('./routes/fine.routes');
+const memberRoutes = require('./routes/member.routes');
+const transactionRoutes = require('./routes/transaction.routes');
 
 app.use(express.json());
 
-app.use("/books", require("./routes/book.routes"));
-app.use("/members", require("./routes/member.routes"));
-app.use("/transactions", require("./routes/transaction.routes"));
-app.use("/fines", require("./routes/fine.routes"));
+// Use routes
+app.use('/books', bookRoutes);
+app.use('/fines', fineRoutes);
+app.use('/members', memberRoutes);
+app.use('/transactions', transactionRoutes);
 
-db.sequelize.sync().then(() => {
-    console.log("Database Ready");
-    app.listen(3000, () => console.log("Server running on port 3000"));
-});
+const PORT = 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

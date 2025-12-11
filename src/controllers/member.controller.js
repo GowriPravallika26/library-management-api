@@ -1,21 +1,59 @@
-// Member Controller
+// controllers/members.js
+const Member = require('../models/member.model');
 
-exports.getAllMembers = (req, res) => {
-    res.json({ message: "All members list" });
+// Get all members
+const getAllMembers = async (req, res) => {
+  try {
+    const members = await Member.findAll();
+    res.json(members);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
-exports.createMember = (req, res) => {
-    res.json({ message: "Member created successfully" });
+// Get member by ID
+const getMemberById = async (req, res) => {
+  try {
+    const member = await Member.findByPk(req.params.id);
+    if (!member) return res.status(404).json({ message: "Member not found" });
+    res.json(member);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
-exports.getMemberById = (req, res) => {
-    res.json({ message: `Member details for ID ${req.params.id}` });
+// Create a new member
+const createMember = async (req, res) => {
+  try {
+    const member = await Member.create(req.body);
+    res.status(201).json(member);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
-exports.updateMember = (req, res) => {
-    res.json({ message: `Member with ID ${req.params.id} updated` });
+// Update a member
+const updateMember = async (req, res) => {
+  try {
+    const member = await Member.findByPk(req.params.id);
+    if (!member) return res.status(404).json({ message: "Member not found" });
+    await member.update(req.body);
+    res.json(member);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
-exports.deleteMember = (req, res) => {
-    res.json({ message: `Member with ID ${req.params.id} deleted` });
+// Delete a member
+const deleteMember = async (req, res) => {
+  try {
+    const member = await Member.findByPk(req.params.id);
+    if (!member) return res.status(404).json({ message: "Member not found" });
+    await member.destroy();
+    res.json({ message: "Member deleted" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
+
+module.exports = { getAllMembers, getMemberById, createMember, updateMember, deleteMember };

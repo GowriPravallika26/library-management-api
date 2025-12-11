@@ -1,10 +1,16 @@
-const express = require("express");
+// routes/transactions.js
+const express = require('express');
 const router = express.Router();
-const transactionController = require("../controllers/transaction.controller");
+const {
+  getAllTransactions,
+  createTransaction,
+  updateTransaction,
+  deleteTransaction
+} = require('../controllers/transaction.controller');
 
-router.get("/", transactionController.getAllTransactions);
-router.post("/issue", transactionController.issueBook);
-router.post("/return", transactionController.returnBook);
-router.get("/:id", transactionController.getTransactionById);
+router.get('/', getAllTransactions);
+router.post('/', createTransaction);
+router.put('/:id', updateTransaction);
+router.delete('/:id', deleteTransaction);
 
 module.exports = router;
